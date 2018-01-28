@@ -1,0 +1,11 @@
+keras
+numpy
+pandas
+seaborn
+matplotlib
+re
+nltk
+gensim
+pickle
+tqdm
+itertools
