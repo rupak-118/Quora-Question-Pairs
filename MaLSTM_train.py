@@ -66,7 +66,7 @@ def text_clean(corpus, keep_list):
     '''
     cleaned_corpus = pd.Series()
     for row in corpus:
-        qs = []
+        qs_list = []
         for word in row.split():
             word = word.lower()
             word = re.sub(r"[^a-zA-Z0-9^.']"," ",word)
@@ -84,10 +84,10 @@ def text_clean(corpus, keep_list):
             # Preserves certain frequently occuring dot words
             if word not in keep_list:
                 p1 = re.sub(pattern='[^a-zA-Z0-9]',repl=' ',string=word)
-                qs.append(p1)
-            else : qs.append(word)
+                qs_list.append(p1)
+            else : qs_list.append(word)
         
-        cleaned_corpus = cleaned_corpus.append(pd.Series(' '.join(qs)))
+        cleaned_corpus = cleaned_corpus.append(pd.Series(' '.join(qs_list)))
     return cleaned_corpus
 
 
@@ -247,7 +247,7 @@ X = qs[questions_cols]
 y = train['is_duplicate']
 
 from sklearn.model_selection import train_test_split
-X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = 0.15)
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size = 0.15, random_state = 102)
 
 # Preparing train and validation feature-sets
 X_train = {'left': X_train.q1, 'right': X_train.q2}
@@ -285,18 +285,18 @@ batch_size = 64
 n_epoch = 1
 
 # The visible layer
-left_input = Input(shape=(max_seq_length,), dtype='int32')
-right_input = Input(shape=(max_seq_length,), dtype='int32')
+left_input = Input(shape=(max_seq_length,), dtype='int32', name = 'input_1')
+right_input = Input(shape=(max_seq_length,), dtype='int32', name = 'input_2')
 
 embedding_layer = Embedding(len(embeddings), embedding_dim, weights=[embeddings], 
-                            input_length=max_seq_length, trainable=False)
+                            input_length=max_seq_length, trainable=False, name = 'embedding_1_2')
 
 # Embedded version of the inputs
 encoded_left = embedding_layer(left_input)
 encoded_right = embedding_layer(right_input)
 
 # Since this is a siamese network, both sides share the same LSTM
-shared_lstm = LSTM(n_hidden, activation = 'relu')
+shared_lstm = LSTM(n_hidden, activation = 'relu', name = 'lstm_1_2')
 
 left_output = shared_lstm(encoded_left)
 right_output = shared_lstm(encoded_right)
@@ -322,7 +322,7 @@ for i in range(0,3):
 
 
 # Load saved weights and then compile to make it ready for further training or predictions
-model.load_weights("model30_relu_epoch_3.h5")
+model.load_weights("model30_relu_epoch_3.h5", by_name = True)
 model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 
 ## Making predictions on validation set

@@ -1,4 +1,5 @@
 keras
+theano/tensorflow (for keras backend)
 numpy
 pandas
 seaborn

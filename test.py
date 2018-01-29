@@ -219,18 +219,18 @@ batch_size = 64
 n_epoch = 1
 
 # The visible layer
-left_input = Input(shape=(max_seq_length,), dtype='int32')
-right_input = Input(shape=(max_seq_length,), dtype='int32')
+left_input = Input(shape=(max_seq_length,), dtype='int32', name = 'input_1')
+right_input = Input(shape=(max_seq_length,), dtype='int32', name = 'input_2')
 
 embedding_layer = Embedding(len(embeddings), embedding_dim, weights=[embeddings], input_length=max_seq_length, 
-                            trainable=False)
+                            trainable=False, name = 'embed_new')
 
 # Embedded version of the inputs
 encoded_left = embedding_layer(left_input)
 encoded_right = embedding_layer(right_input)
 
 # Since this is a siamese network, both sides share the same LSTM
-shared_lstm = LSTM(n_hidden, activation = 'relu')
+shared_lstm = LSTM(n_hidden, activation = 'relu', name = 'lstm_1_2')
 
 left_output = shared_lstm(encoded_left)
 right_output = shared_lstm(encoded_right)
@@ -244,7 +244,7 @@ model = Model([left_input, right_input], [malstm_distance])
 
 #print("\nModel built")
 ## Loading weights from a pre-trained model
-model.load_weights("model30_relu_epoch_3.h5")
+model.load_weights("model30_relu_epoch_3.h5", by_name = True)
 model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 #print("\n Weights loaded and compiled")
 
