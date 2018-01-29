@@ -50,7 +50,7 @@ def text_clean(corpus, keep_list):
     '''
     cleaned_corpus = pd.Series()
     for row in corpus:
-        qs = []
+        qs_list = []
         for word in row.split():
             word = word.lower()
             word = re.sub(r"[^a-zA-Z0-9^.']"," ",word)
@@ -68,11 +68,13 @@ def text_clean(corpus, keep_list):
             # Preserves certain frequently occuring dot words
             if word not in keep_list:
                 p1 = re.sub(pattern='[^a-zA-Z0-9]',repl=' ',string=word)
-                qs.append(p1)
-            else : qs.append(word)
+                qs_list.append(p1)
+            else : qs_list.append(word)
         
-        cleaned_corpus = cleaned_corpus.append(pd.Series(' '.join(qs)))
+        cleaned_corpus = cleaned_corpus.append(pd.Series(' '.join(qs_list)))
+    
     return cleaned_corpus
+
 
 def preprocess(corpus, keep_list, cleaning = True, stemming = False, stem_type = None, lemmatization = True, remove_stopwords = True):
     
