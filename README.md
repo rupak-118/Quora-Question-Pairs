@@ -24,6 +24,7 @@ Pre-trained model used in the testing script has 81.2% validation accuracy. 15% 
 * Ensure all libraries as mentioned in the **requirements.txt** file are downloaded
 * Download Google's pre-trained Word2Vec embedding file and keep the extracted file in the same folder where this repo is cloned. 
 Link : https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit
+* Download the weight file, 'model30_relu_epoch_3.h5' and 'test.py' to your local system or you can download the entire repo using git clone
 * The testing script can be run from the terminal as shown below :
 
                                          python test.py s1 s2
